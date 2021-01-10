@@ -1,11 +1,13 @@
 import Head from 'next/head';
+import Link from 'next/link';
+
 import Layout, { siteTitle } from '../components/layout';
 import utilStyles from '../styles/utils.module.css';
 import { getSortedPostsData } from '../lib/posts';
-import Link from 'next/link';
 import Date from '../components/date';
+import { GetStaticProps } from 'next';
 
-export async function getStaticProps() {
+export const getStaticProps: GetStaticProps = async () => {
   const allPostsData = getSortedPostsData();
 
   return {
@@ -13,9 +15,41 @@ export async function getStaticProps() {
       allPostsData,
     },
   };
+};
+
+interface HomeProps {
+  allPostsData: {
+    date: string
+    title: string
+    id: string
+  }[]
 }
 
-export default function Home({ allPostsData = [] }) {
+interface PostListItemProps {
+  id: string,
+  date: string,
+  title: string,
+}
+
+function PostListItem({ id, date, title }: PostListItemProps) {
+  return (
+    <li className={ utilStyles.listItem } key={ id }>
+      <Link href={ `/posts/${ id }` }>
+        <a>
+          { title }
+        </a>
+      </Link>
+
+      <br/>
+
+      <small className={ utilStyles.lightText }>
+        <Date dateString={ date }/>
+      </small>
+    </li>
+  );
+}
+
+export default function Home({ allPostsData = [] }: HomeProps) {
   return (
     <Layout home>
       <Head>
@@ -55,19 +89,7 @@ export default function Home({ allPostsData = [] }) {
         </h2>
 
         <ul className={ utilStyles.list }>
-          { allPostsData.map(({ id, date, title }) => (
-            <li className={ utilStyles.listItem } key={ id }>
-              <Link href={ `/posts/${ id }` }>
-                <a>{ title }</a>
-              </Link>
-
-              <br/>
-
-              <small className={ utilStyles.lightText }>
-                <Date dateString={ date }/>
-              </small>
-            </li>
-          )) }
+          { allPostsData.map(PostListItem) }
         </ul>
       </section>
     </Layout>
