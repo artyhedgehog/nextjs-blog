@@ -1,28 +1,57 @@
+import React from 'react';
+import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 
 import Layout, { siteTitle } from '../components/layout';
 import utilStyles from '../styles/utils.module.css';
-import { getSortedPostsData } from '../lib/posts';
+import { getSortedPostsData, PostListItemData } from '../server/lib/posts.service';
 import Date from '../components/date';
-import { GetStaticProps } from 'next';
+import { getHomeDescriptionData, HomeDescriptionData } from '../server/lib/home.service';
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps<HomeProps, {}> = async () => {
   const allPostsData = getSortedPostsData();
+  const homeDescriptionData = await getHomeDescriptionData();
 
+  const props: HomeProps = {
+    allPostsData,
+    homeDescriptionData,
+  };
   return {
-    props: {
-      allPostsData,
-    },
+    props,
   };
 };
 
+export default function Home({ allPostsData = [], homeDescriptionData = {} }: HomeProps) {
+  return (
+    <Layout home>
+      <Head>
+        <title>
+          { siteTitle }
+        </title>
+      </Head>
+
+      <section
+        className={ utilStyles.headingMd }
+        dangerouslySetInnerHTML={ { __html: homeDescriptionData.contentHtml } }
+      />
+
+      <section className={ `${ utilStyles.headingMd } ${ utilStyles.padding1px }` }>
+        <h2 className={ utilStyles.headingLg }>
+          Blog
+        </h2>
+
+        <ul className={ utilStyles.list }>
+          { allPostsData.map(PostListItem) }
+        </ul>
+      </section>
+    </Layout>
+  );
+}
+
 interface HomeProps {
-  allPostsData: {
-    date: string
-    title: string
-    id: string
-  }[]
+  allPostsData: PostListItemData[],
+  homeDescriptionData: HomeDescriptionData,
 }
 
 interface PostListItemProps {
@@ -46,52 +75,5 @@ function PostListItem({ id, date, title }: PostListItemProps) {
         <Date dateString={ date }/>
       </small>
     </li>
-  );
-}
-
-export default function Home({ allPostsData = [] }: HomeProps) {
-  return (
-    <Layout home>
-      <Head>
-        <title>
-          { siteTitle }
-        </title>
-      </Head>
-
-      <section className={ utilStyles.headingMd }>
-        <p>
-          I am a software engineer, web developer, and programmer, currently living in Saint
-          Petersburg, Russia with my wife and a little son. My interests range from science to
-          buddhism. I am also interested in productivity techniques, tea, music, and literature.
-        </p>
-
-        <p>
-          My top values in people are honesty, rationalism, benevolence. As a developer I prefer to
-          work in team, supporting my colleagues and finding ways to achieve a common goal.
-        </p>
-
-        <p>
-          Currently working as a front-end developer in Wrike.
-        </p>
-
-        <p>
-          (This is a sample website - you’ll be building a site like this on{ ' ' }
-
-          <a href="https://nextjs.org/learn">
-            our Next.js tutorial
-          </a>.)
-        </p>
-      </section>
-
-      <section className={ `${ utilStyles.headingMd } ${ utilStyles.padding1px }` }>
-        <h2 className={ utilStyles.headingLg }>
-          Blog
-        </h2>
-
-        <ul className={ utilStyles.list }>
-          { allPostsData.map(PostListItem) }
-        </ul>
-      </section>
-    </Layout>
   );
 }
