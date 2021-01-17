@@ -3,7 +3,7 @@ import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 
-import Layout, { siteTitle } from '../components/layout';
+import Layout from '../components/layout';
 import utilStyles from '../styles/utils.module.css';
 import { getSortedPostsData, PostListItemData } from '../server/lib/posts.service';
 import Date from '../components/date';
@@ -24,12 +24,21 @@ export const getStaticProps: GetStaticProps<HomeProps, {}> = async () => {
 };
 
 // noinspection JSUnusedGlobalSymbols
-export default function Home({ allPostsData = [], homeDescriptionData = { contentHtml: null } }: HomeProps) {
+export default function Home(props: HomeProps) {
+  const {
+    allPostsData = [],
+    homeDescriptionData = {
+      title: null,
+      date: null,
+      contentHtml: null,
+    },
+  } = props;
+
   return (
-    <Layout home>
+    <Layout home siteTitle={ homeDescriptionData.title }>
       <Head>
         <title>
-          { siteTitle }
+          { homeDescriptionData.title }
         </title>
       </Head>
 

@@ -1,4 +1,4 @@
-import matter from 'gray-matter';
+import matter, { GrayMatterFile } from 'gray-matter';
 import remark from 'remark';
 import html from 'remark-html';
 import { HastUtilToHtmlOptions } from 'hast-util-to-html';
@@ -10,7 +10,7 @@ interface MarkdownMatterWithContent {
   contentHtml: string;
 }
 
-export function parseMarkdownFileMatter(fullPath: string) {
+export function parseMarkdownFileMatter(fullPath: string): GrayMatterFile<string> {
   const fileContents = getFileContents(fullPath);
 
   // Use gray-matter to parse the post metadata section
