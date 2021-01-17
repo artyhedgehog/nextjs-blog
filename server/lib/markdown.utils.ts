@@ -22,7 +22,7 @@ export async function parseMarkdownFile(fullPath: string): Promise<MarkdownMatte
 
   // Use remark to convert markdown into HTML string
   const processedContent = await remark().
-    use<[HastUtilToHtmlOptions]>(html).
+    use<[HastUtilToHtmlOptions?]>(html).
     process(matterResult.content);
   const contentHtml = processedContent.toString();
 

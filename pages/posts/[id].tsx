@@ -1,6 +1,7 @@
 import React from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
+import { ParsedUrlQuery } from 'querystring';
 
 import Layout from '../../components/layout';
 import {
@@ -12,7 +13,8 @@ import {
 import Date from '../../components/date';
 import utilStyles from '../../styles/utils.module.css';
 
-export const getStaticPaths: GetStaticPaths<PostIdParams> = async () => {
+// noinspection JSUnusedGlobalSymbols
+export const getStaticPaths: GetStaticPaths<PostIdParams & ParsedUrlQuery> = async () => {
   const paths = getAllPostIds();
 
   return {
@@ -21,6 +23,7 @@ export const getStaticPaths: GetStaticPaths<PostIdParams> = async () => {
   };
 };
 
+// noinspection JSUnusedGlobalSymbols
 export const getStaticProps: GetStaticProps<PostProps, PostIdParams> = async ({ params }) => {
   const postData = await getPostData(params.id);
 
@@ -33,6 +36,7 @@ interface PostProps {
   postData: PostData;
 }
 
+// noinspection JSUnusedGlobalSymbols
 export default function Post({ postData }: PostProps) {
   return (
     <Layout>

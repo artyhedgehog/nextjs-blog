@@ -1,3 +1,5 @@
+import { ParsedUrlQuery } from 'querystring';
+
 import { getFileNames } from './files.utils';
 import { parseMarkdownFileMatter, parseMarkdownFile } from './markdown.utils';
 import { getPostFullPathByFileName, getPostFullPathById, getPostId, postsDirectory } from './paths.utils';
@@ -32,7 +34,7 @@ export function getSortedPostsData(): PostListItemData[] {
   });
 }
 
-export interface PostIdParams {
+export interface PostIdParams extends ParsedUrlQuery {
   id: string
 }
 

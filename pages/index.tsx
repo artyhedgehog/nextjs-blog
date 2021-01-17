@@ -9,6 +9,7 @@ import { getSortedPostsData, PostListItemData } from '../server/lib/posts.servic
 import Date from '../components/date';
 import { getHomeDescriptionData, HomeDescriptionData } from '../server/lib/home.service';
 
+// noinspection JSUnusedGlobalSymbols
 export const getStaticProps: GetStaticProps<HomeProps, {}> = async () => {
   const allPostsData = getSortedPostsData();
   const homeDescriptionData = await getHomeDescriptionData();
@@ -22,7 +23,8 @@ export const getStaticProps: GetStaticProps<HomeProps, {}> = async () => {
   };
 };
 
-export default function Home({ allPostsData = [], homeDescriptionData = {} }: HomeProps) {
+// noinspection JSUnusedGlobalSymbols
+export default function Home({ allPostsData = [], homeDescriptionData = { contentHtml: null } }: HomeProps) {
   return (
     <Layout home>
       <Head>
